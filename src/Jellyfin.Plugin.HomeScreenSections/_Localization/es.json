@@ -64,5 +64,13 @@
   "Thriller": "Thriller",
   "TVMovie": "Película para TV",
   "War": "Guerra",
-  "Western": "Western"
+  "Western": "Western",
+  "CollectionsSection": "Colecciones",
+  "RecentlyAddedInLibrary": "Añadido recientemente a {0}",
+  "GenreSectionName": "Género",
+  "AdminModularHomeSettings": "Inicio modular - Ajustes:",
+  "AdminEnableModularHome": "Activar \"Inicio modular\". Cambia tu pantalla de inicio por una más dinámica, con secciones de otros plugins que contribuyen a lo que ves y se te recomienda.",
+  "AdminEnabledSections": "Secciones activadas",
+  "AdminSettingsUpdated": "Los ajustes se han actualizado, recargando la página en 2 segundos.",
+  "AdminSave": "Guardar"
 }
