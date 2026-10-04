@@ -118,8 +118,8 @@
         }
     }
     
-    // Open the item inside Jellyfin's embedded Seerr page. An http Seerr cannot be embedded in an https page
-    // (mixed content), so keep the old new-tab link in that case.
+    // Open the item in the Seerr popup (HSSSeerr, see HomeScreenSections.js). The href stays the real Seerr URL so
+    // middle click / copy link work; an http Seerr cannot be embedded in an https page, so that case keeps a new tab.
     function getDiscoverLink(item) {
         var root = item.ProviderIds.JellyseerrRoot || '';
         var path = '/' + item.SourceType + '/' + item.ProviderIds.Jellyseerr;
@@ -128,7 +128,7 @@
             return { href: root + path, target: ' target="_blank"' };
         }
 
-        return { href: '#/userpluginsettings.html?pageUrl=' + encodeURIComponent('/ModularHomeViews/seerr?path=' + path), target: '' };
+        return { href: root + path, target: ' data-hss-seerr="1"' };
     }
 
     function createDiscoverCards(items) {

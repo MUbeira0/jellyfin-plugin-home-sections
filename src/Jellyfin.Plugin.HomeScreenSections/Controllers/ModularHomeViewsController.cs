@@ -129,6 +129,22 @@ namespace Jellyfin.Plugin.HomeScreenSections.Controllers
         }
 
         /// <summary>
+        /// URL of the Jellyseerr/Seerr instance shown in the popup.
+        /// </summary>
+        /// <returns>The configured URL, or an empty string.</returns>
+        [HttpGet("seerr/url")]
+        [Authorize]
+        public ActionResult<object> GetSeerrUrl()
+        {
+            PluginConfiguration config = HomeScreenSectionsPlugin.Instance.Configuration;
+            string url = !string.IsNullOrWhiteSpace(config.JellyseerrExternalUrl)
+                ? config.JellyseerrExternalUrl!
+                : config.JellyseerrUrl ?? string.Empty;
+
+            return new { Url = url.Trim() };
+        }
+
+        /// <summary>
         /// Page that embeds the configured Jellyseerr/Seerr instance inside Jellyfin.
         /// </summary>
         /// <returns>HTML fragment for the Plugin Pages container.</returns>

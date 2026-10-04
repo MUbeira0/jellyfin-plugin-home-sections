@@ -9,6 +9,14 @@
     "imageUrl": "https://raw.githubusercontent.com/MUbeira0/jellyfin-plugin-home-sections/fix/jellyfin-10.11.11/src/logo.png",
     "versions": [
       {
+        "version": "3.0.2.4",
+        "changelog": "Seerr now opens as a popup on top of the current Jellyfin page (Discover cards and the Seerr menu entry) instead of a full page or a new tab. Close with the X, Esc or by clicking outside.",
+        "targetAbi": "10.11.11.0",
+        "sourceUrl": "https://github.com/MUbeira0/jellyfin-plugin-home-sections/releases/download/v3.0.2.4/home-screen-sections_3.0.2.4.zip",
+        "checksum": "093BC2E51184B5C88380D065F59D4421",
+        "timestamp": "2026-10-04T16:00:44Z"
+      },
+      {
         "version": "3.0.2.3",
         "changelog": "Seerr cards in Discover now open Seerr inside Jellyfin (deep-linked to the movie/series) instead of a new tab. Patched web chunks are cache-busted with the plugin version so updates reach browsers and CDNs immediately.",
         "targetAbi": "10.11.11.0",

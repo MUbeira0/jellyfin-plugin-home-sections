@@ -48,5 +48,5 @@ then install "Home Screen Sections" from the catalogue. The zip is attached to t
 
 If `JellyseerrExternalUrl` (or `JellyseerrUrl`) is set in the plugin settings, a "Seerr" page is registered:
 a link in the main navigation drawer and one under "Plugin Settings", opening `/ModularHomeViews/seerr`, which
-embeds Seerr in an iframe. The URL must be https when Jellyfin is served over https (browsers block mixed content),
+embeds Seerr in an iframe. The drawer entry and the Discover cards instead open it as a popup (`window.HSSSeerr`). The URL must be https when Jellyfin is served over https (browsers block mixed content),
 and Seerr must be on the same site as Jellyfin for its login cookie to work inside the iframe.
