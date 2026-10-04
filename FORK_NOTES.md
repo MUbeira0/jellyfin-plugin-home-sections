@@ -43,3 +43,10 @@ https://raw.githubusercontent.com/MUbeira0/jellyfin-plugin-home-sections/fix/jel
 
 then install "Home Screen Sections" from the catalogue. The zip is attached to the GitHub release
 (`home-screen-sections_<version>.zip`); the manifest holds its MD5 checksum.
+
+## Seerr page
+
+If `JellyseerrExternalUrl` (or `JellyseerrUrl`) is set in the plugin settings, a "Seerr" page is registered:
+a link in the main navigation drawer and one under "Plugin Settings", opening `/ModularHomeViews/seerr`, which
+embeds Seerr in an iframe. The URL must be https when Jellyfin is served over https (browsers block mixed content),
+and Seerr must be on the same site as Jellyfin for its login cookie to work inside the iframe.

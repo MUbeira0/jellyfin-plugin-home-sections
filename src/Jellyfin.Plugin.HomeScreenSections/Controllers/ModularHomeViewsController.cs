@@ -128,6 +128,50 @@ namespace Jellyfin.Plugin.HomeScreenSections.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Page that embeds the configured Jellyseerr/Seerr instance inside Jellyfin.
+        /// </summary>
+        /// <returns>HTML fragment for the Plugin Pages container.</returns>
+        [HttpGet("seerr")]
+        [Authorize]
+        public ContentResult GetSeerrView()
+        {
+            PluginConfiguration config = HomeScreenSectionsPlugin.Instance.Configuration;
+            string url = !string.IsNullOrWhiteSpace(config.JellyseerrExternalUrl)
+                ? config.JellyseerrExternalUrl!
+                : config.JellyseerrUrl ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return Content("<p>Seerr is not configured. Set the Jellyseerr URL in the Home Screen Sections plugin settings.</p>", "text/html");
+            }
+
+            string encodedUrl = System.Net.WebUtility.HtmlEncode(url.Trim());
+
+            // A browser blocks an http iframe inside an https Jellyfin page, so fall back to a link in that case.
+            string html = $@"<div class=""seerr-embed"">
+    <iframe id=""seerr-frame"" src=""{encodedUrl}"" allow=""fullscreen; clipboard-write"" referrerpolicy=""no-referrer-when-downgrade"" style=""width:100%;height:calc(100vh - 7em);border:0;border-radius:6px;background:#111;""></iframe>
+</div>
+<script>
+    (function () {{
+        var frame = document.getElementById('seerr-frame');
+        if (frame && window.location.protocol === 'https:' && frame.getAttribute('src').indexOf('http:') === 0) {{
+            var link = document.createElement('a');
+            link.href = frame.getAttribute('src');
+            link.target = '_blank';
+            link.rel = 'noopener';
+            link.textContent = link.href;
+            var note = document.createElement('p');
+            note.textContent = 'Seerr runs over http and cannot be embedded in this https page. Set the external (https) Seerr URL in the plugin settings, or open it here: ';
+            note.appendChild(link);
+            frame.parentNode.replaceChild(note, frame);
+        }}
+    }})();
+</script>";
+
+            return Content(html, "text/html");
+        }
+
         private ActionResult ServeView(string viewName)
         {
             if (HomeScreenSectionsPlugin.Instance == null)

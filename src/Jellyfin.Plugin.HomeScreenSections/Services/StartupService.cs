@@ -180,6 +180,19 @@ namespace Jellyfin.Plugin.HomeScreenSections.Services
             {
                 CleanupLegacyPluginPage();
                 pluginInterface.GetMethod("RegisterPage")?.Invoke(null, new object?[] { payload });
+
+                JObject seerrPayload = new JObject
+                {
+                    { "Id", $"{typeof(HomeScreenSectionsPlugin).Namespace}.Seerr" },
+                    { "Url", $"{(supportsSubUrls ? "" : rootUrl)}/ModularHomeViews/seerr" },
+                    { "DisplayText", "Seerr" },
+                    { "Icon", "explore" },
+                    { "Version", pluginPageConfigVersion },
+                    { "IsEnabledAssembly", Assembly.GetExecutingAssembly().FullName },
+                    { "IsEnabledClass", nameof(PluginInterface) },
+                    { "IsEnabledMethod", nameof(PluginInterface.IsSeerrPageEnabled) }
+                };
+                pluginInterface.GetMethod("RegisterPage")?.Invoke(null, new object?[] { seerrPayload });
             }
             else
             {

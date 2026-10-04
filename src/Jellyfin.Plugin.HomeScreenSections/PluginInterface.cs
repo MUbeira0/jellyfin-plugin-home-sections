@@ -83,5 +83,17 @@ namespace Jellyfin.Plugin.HomeScreenSections
             
             return HomeScreenSectionsPlugin.Instance.Configuration.AllowUserOverride;
         }
+
+        public static bool IsSeerrPageEnabled(string id)
+        {
+            if (Assembly.GetCallingAssembly().GetName().Name != "Jellyfin.Plugin.PluginPages")
+            {
+                throw new InvalidOperationException("IsSeerrPageEnabled can only be called from the PluginPages plugin.");
+            }
+
+            PluginConfiguration config = HomeScreenSectionsPlugin.Instance.Configuration;
+
+            return !string.IsNullOrWhiteSpace(config.JellyseerrExternalUrl) || !string.IsNullOrWhiteSpace(config.JellyseerrUrl);
+        }
     }
 }

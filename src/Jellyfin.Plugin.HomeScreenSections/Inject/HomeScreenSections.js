@@ -14,6 +14,61 @@
     window.addEventListener('hashchange', fixPluginSettingsRoute);
 })();
 
+// Plugin Pages only lists plugin pages under "Plugin Settings" in the user menu. Add a direct "Seerr" entry
+// to the main navigation drawer when the Seerr page is enabled for the current user.
+(function () {
+    var linkId = 'hss-seerr-link';
+    var seerrPageId = 'Jellyfin.Plugin.HomeScreenSections.Seerr';
+    var seerrAvailable = null;
+    var requested = false;
+
+    function loadAvailability() {
+        if (requested || !window.ApiClient || !window.ApiClient.getCurrentUserId || !window.ApiClient.getCurrentUserId()) {
+            return;
+        }
+
+        requested = true;
+        window.ApiClient.getJSON(window.ApiClient.getUrl('PluginPages/User')).then(function (result) {
+            seerrAvailable = (result.Items || []).some(function (item) { return item.Id === seerrPageId; });
+            addSeerrLink();
+        }, function () {
+            requested = false;
+        });
+    }
+
+    function addSeerrLink() {
+        if (!seerrAvailable || document.getElementById(linkId)) {
+            return;
+        }
+
+        var drawer = document.querySelector('.mainDrawer-scrollContainer');
+        var libraries = drawer && drawer.querySelector('.libraryMenuOptions');
+        if (!libraries) {
+            return;
+        }
+
+        var link = document.createElement('a');
+        link.id = linkId;
+        link.setAttribute('is', 'emby-linkbutton');
+        link.className = 'navMenuOption lnkMediaFolder';
+        link.href = '#/userpluginsettings.html?pageUrl=/ModularHomeViews/seerr';
+        link.innerHTML = '<span class="material-icons navMenuOptionIcon explore" aria-hidden="true"></span>' +
+            '<span class="sectionName navMenuOptionText">Seerr</span>';
+        libraries.parentNode.insertBefore(link, libraries);
+    }
+
+    function onDomChange() {
+        if (seerrAvailable === null) {
+            loadAvailability();
+        } else {
+            addSeerrLink();
+        }
+    }
+
+    new MutationObserver(onDomChange).observe(document.documentElement, { childList: true, subtree: true });
+    onDomChange();
+})();
+
 if (typeof HomeScreenSectionsHandler == 'undefined') {
     const HomeScreenSectionsHandler = {
         init: function() {
