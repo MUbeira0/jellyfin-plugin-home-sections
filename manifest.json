@@ -13,7 +13,7 @@
         "changelog": "Jellyfin 10.11.11 build. Fixes the Modular Home menu link (404 caused by jellyfin-web stripping .html), cache-busts the patched main bundle, adds Spanish translations. See FORK_NOTES.md.",
         "targetAbi": "10.11.11.0",
         "sourceUrl": "https://github.com/MUbeira0/jellyfin-plugin-home-sections/releases/download/v3.0.2.1/home-screen-sections_3.0.2.1.zip",
-        "checksum": "\B7E48A22EAFBD7040A263E22B55FAD4C",
+        "checksum": "B7E48A22EAFBD7040A263E22B55FAD4C",
         "timestamp": "2026-10-04T15:33:49Z"
       }
     ]
