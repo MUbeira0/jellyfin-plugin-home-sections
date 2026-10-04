@@ -32,3 +32,14 @@ Install into `<jellyfin data>/plugins/Home Screen Sections_3.0.2.0/` (dll, deps.
   per section id; a user can only enable sections that exist there.
 - Disable Jellyfin's "Update plugins" task (or pin the plugin) so the repository version does not replace
   this build.
+
+## Install from this repository
+
+In Jellyfin: Dashboard > Plugins > Repositories > add
+
+```
+https://raw.githubusercontent.com/MUbeira0/jellyfin-plugin-home-sections/fix/jellyfin-10.11.11/manifest.json
+```
+
+then install "Home Screen Sections" from the catalogue. The zip is attached to the GitHub release
+(`home-screen-sections_<version>.zip`); the manifest holds its MD5 checksum.

@@ -1,0 +1,21 @@
+[
+  {
+    "guid": "b8298e01-2697-407a-b44d-aa8dc795e850",
+    "name": "Home Screen Sections",
+    "description": "Fork of IAmParadox27/jellyfin-plugin-home-sections built and tested for Jellyfin 10.11.11. Adds a modular home screen with configurable sections. Requires the File Transformation and Plugin Pages plugins.",
+    "overview": "Modular home screen sections for Jellyfin 10.11.11 (fork).",
+    "owner": "MUbeira0 (fork of IAmParadox27)",
+    "category": "General",
+    "imageUrl": "https://raw.githubusercontent.com/MUbeira0/jellyfin-plugin-home-sections/fix/jellyfin-10.11.11/src/logo.png",
+    "versions": [
+      {
+        "version": "3.0.2.1",
+        "changelog": "Jellyfin 10.11.11 build. Fixes the Modular Home menu link (404 caused by jellyfin-web stripping .html), cache-busts the patched main bundle, adds Spanish translations. See FORK_NOTES.md.",
+        "targetAbi": "10.11.11.0",
+        "sourceUrl": "https://github.com/MUbeira0/jellyfin-plugin-home-sections/releases/download/v3.0.2.1/home-screen-sections_3.0.2.1.zip",
+        "checksum": "\B7E48A22EAFBD7040A263E22B55FAD4C",
+        "timestamp": "2026-10-04T15:33:49Z"
+      }
+    ]
+  }
+]
