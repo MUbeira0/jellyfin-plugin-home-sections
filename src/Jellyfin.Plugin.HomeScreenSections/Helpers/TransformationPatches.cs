@@ -47,6 +47,24 @@ namespace Jellyfin.Plugin.HomeScreenSections.Helpers
             return regex;
         }
 
+        /// <summary>
+        /// jellyfin-web's router strips ".html" from in-app navigations (replaceState), so Plugin Pages' links to
+        /// "userpluginsettings.html" end up on "userpluginsettings", which has no route. Register that route too.
+        /// </summary>
+        public static string MainBundle(PatchRequestPayload content)
+        {
+            const string alias = "{path:\"userpluginsettings\",pageProps:{controller:\"user/plugin/index\",view:\"user/plugin/index.html\"}},";
+            const string anchor = "{path:\"queue\",pageProps:";
+
+            string contents = content.Contents!;
+            if (contents.Contains("{path:\"userpluginsettings\",") || !contents.Contains(anchor))
+            {
+                return contents;
+            }
+
+            return contents.Replace(anchor, alias + anchor);
+        }
+
         public static string IndexHtml(PatchRequestPayload content)
         {
             NetworkConfiguration networkConfiguration = HomeScreenSectionsPlugin.Instance.ServerConfigurationManager.GetNetworkConfiguration();
@@ -75,7 +93,11 @@ namespace Jellyfin.Plugin.HomeScreenSections.Helpers
             string replacementText0 = $"<link rel=\"stylesheet\" href=\"{rootPath}/HomeScreen/home-screen-sections.css{cacheParam}\" />";
             string replacementText1 = $"<script type=\"text/javascript\" plugin=\"Jellyfin.Plugin.HomeScreenSections\" src=\"{rootPath}/HomeScreen/home-screen-sections.js{cacheParam}\" defer></script>";
             
-            return content.Contents!
+            // The main bundle is patched by MainBundle but keeps jellyfin-web's own content hash in its URL, so
+            // browsers/CDNs holding the unpatched file would never refetch it. Tag the URL with the plugin's cache key.
+            string html = Regex.Replace(content.Contents!, @"(main\.jellyfin\.bundle\.js\?[^""']+)", $"$1&hss={pluginVersion}.{pluginConfig.CacheBustCounter}");
+
+            return html
                 .Replace("</head>", $"{replacementText0}</head>")
                 .Replace("</body>", $"{replacementText1}</body>");
         }
