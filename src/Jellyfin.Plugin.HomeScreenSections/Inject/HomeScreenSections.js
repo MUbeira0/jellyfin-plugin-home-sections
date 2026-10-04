@@ -1,5 +1,19 @@
 'use strict';
 
+// Plugin Pages registers the user settings route as "userpluginsettings.html". Links cached by older
+// Plugin Pages versions point at "userpluginsettings" (no extension), which jellyfin-web answers with "Page not found".
+(function () {
+    function fixPluginSettingsRoute() {
+        var fixed = window.location.hash.replace(/^#\/userpluginsettings(\?|$)/, '#/userpluginsettings.html$1');
+        if (fixed !== window.location.hash) {
+            window.location.replace(fixed);
+        }
+    }
+
+    fixPluginSettingsRoute();
+    window.addEventListener('hashchange', fixPluginSettingsRoute);
+})();
+
 if (typeof HomeScreenSectionsHandler == 'undefined') {
     const HomeScreenSectionsHandler = {
         init: function() {
