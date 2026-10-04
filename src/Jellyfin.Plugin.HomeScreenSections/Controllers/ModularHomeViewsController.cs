@@ -134,7 +134,7 @@ namespace Jellyfin.Plugin.HomeScreenSections.Controllers
         /// <returns>HTML fragment for the Plugin Pages container.</returns>
         [HttpGet("seerr")]
         [Authorize]
-        public ContentResult GetSeerrView()
+        public ContentResult GetSeerrView([FromQuery] string? path = null)
         {
             PluginConfiguration config = HomeScreenSectionsPlugin.Instance.Configuration;
             string url = !string.IsNullOrWhiteSpace(config.JellyseerrExternalUrl)
@@ -146,7 +146,14 @@ namespace Jellyfin.Plugin.HomeScreenSections.Controllers
                 return Content("<p>Seerr is not configured. Set the Jellyseerr URL in the Home Screen Sections plugin settings.</p>", "text/html");
             }
 
-            string encodedUrl = System.Net.WebUtility.HtmlEncode(url.Trim());
+            // Optional deep link, e.g. "/movie/603". Only a plain absolute path is appended to the configured base URL.
+            string target = url.Trim();
+            if (!string.IsNullOrEmpty(path) && path.StartsWith('/') && !path.StartsWith("//") && !path.Any(c => char.IsWhiteSpace(c) || c == '\\'))
+            {
+                target = target.TrimEnd('/') + path;
+            }
+
+            string encodedUrl = System.Net.WebUtility.HtmlEncode(target);
 
             // A browser blocks an http iframe inside an https Jellyfin page, so fall back to a link in that case.
             string html = $@"<div class=""seerr-embed"">

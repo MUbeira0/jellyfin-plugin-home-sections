@@ -83,7 +83,17 @@ namespace Jellyfin.Plugin.HomeScreenSections.Services
                 payloads.Add(payload);
             }
 
-            string[] allJsChunks =Directory.GetFiles(m_applicationPaths.WebPath, "*.chunk.js", SearchOption.AllDirectories);
+            {
+                JObject payload = new JObject();
+                payload.Add("id", "3c9e51d8-0f2a-4b7c-8d64-5a1b9e07c2f3");
+                payload.Add("fileNamePattern", "runtime.bundle.js");
+                payload.Add("callbackAssembly", GetType().Assembly.FullName);
+                payload.Add("callbackClass", typeof(TransformationPatches).FullName);
+                payload.Add("callbackMethod", nameof(TransformationPatches.RuntimeBundle));
+                payloads.Add(payload);
+            }
+
+            string[] allJsChunks = Directory.GetFiles(m_applicationPaths.WebPath, "*.chunk.js", SearchOption.AllDirectories);
             foreach (string jsChunk in allJsChunks)
             {
                 if (File.ReadAllText(jsChunk).Contains(",loadSections:"))

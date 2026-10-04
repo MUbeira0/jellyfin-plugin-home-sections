@@ -65,6 +65,26 @@ namespace Jellyfin.Plugin.HomeScreenSections.Helpers
             return contents.Replace(anchor, alias + anchor);
         }
 
+        /// <summary>
+        /// The patched loadSections chunk keeps jellyfin-web's own content hash in its file name, so a browser or CDN
+        /// holding an older patched copy never refetches it. Append the plugin's cache key to every chunk URL.
+        /// </summary>
+        public static string RuntimeBundle(PatchRequestPayload content)
+        {
+            const string chunkUrlEnd = "[e]+\".chunk.js\"}";
+
+            string contents = content.Contents!;
+            if (!contents.Contains(chunkUrlEnd))
+            {
+                return contents;
+            }
+
+            var pluginConfig = HomeScreenSectionsPlugin.Instance.Configuration;
+            string cacheKey = $"{HomeScreenSectionsPlugin.Instance.GetCurrentPluginVersion()}.{pluginConfig.CacheBustCounter}";
+
+            return contents.Replace(chunkUrlEnd, $"[e]+\".chunk.js?hss={cacheKey}\"}}");
+        }
+
         public static string IndexHtml(PatchRequestPayload content)
         {
             NetworkConfiguration networkConfiguration = HomeScreenSectionsPlugin.Instance.ServerConfigurationManager.GetNetworkConfiguration();
@@ -95,7 +115,7 @@ namespace Jellyfin.Plugin.HomeScreenSections.Helpers
             
             // The main bundle is patched by MainBundle but keeps jellyfin-web's own content hash in its URL, so
             // browsers/CDNs holding the unpatched file would never refetch it. Tag the URL with the plugin's cache key.
-            string html = Regex.Replace(content.Contents!, @"(main\.jellyfin\.bundle\.js\?[^""']+)", $"$1&hss={pluginVersion}.{pluginConfig.CacheBustCounter}");
+            string html = Regex.Replace(content.Contents!, @"((?:main\.jellyfin|runtime)\.bundle\.js\?[^""']+)", $"$1&hss={pluginVersion}.{pluginConfig.CacheBustCounter}");
 
             return html
                 .Replace("</head>", $"{replacementText0}</head>")

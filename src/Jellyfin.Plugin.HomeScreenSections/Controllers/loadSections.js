@@ -118,11 +118,26 @@
         }
     }
     
+    // Open the item inside Jellyfin's embedded Seerr page. An http Seerr cannot be embedded in an https page
+    // (mixed content), so keep the old new-tab link in that case.
+    function getDiscoverLink(item) {
+        var root = item.ProviderIds.JellyseerrRoot || '';
+        var path = '/' + item.SourceType + '/' + item.ProviderIds.Jellyseerr;
+
+        if (window.location.protocol === 'https:' && root.indexOf('http:') === 0) {
+            return { href: root + path, target: ' target="_blank"' };
+        }
+
+        return { href: '#/userpluginsettings.html?pageUrl=' + encodeURIComponent('/ModularHomeViews/seerr?path=' + path), target: '' };
+    }
+
     function createDiscoverCards(items) {
         var html = '';
-        
+
         var index = 0;
         items.forEach(function (item) {
+            var link = getDiscoverLink(item);
+
             html += '<div class="card overflowPortraitCard card-hoverable card-withuserdata discover-card" data-index="' + index + '" data-tmdb-id="' + item.ProviderIds.Jellyseerr + '" data-media-type="' + item.SourceType + '">';
             html += '   <div class="cardBox cardBox-bottompadded">';
             html += '       <div class="cardScalable discoverCard-' + item.SourceType + '">';
@@ -135,9 +150,9 @@
                 posterUrl = window.ApiClient.getUrl(posterUrl);
             }
             
-            html += '           <a is="emby-linkbutton" target="_blank" href="' + item.ProviderIds.JellyseerrRoot + '/' + item.SourceType + '/' + item.ProviderIds.Jellyseerr + '" class="cardImageContainer coveredImage cardContent itemAction lazy blurhashed lazy-image-fadein-fast" aria-label="" style="background-image: url(\'' + posterUrl + '\');color: inherit; text-decoration: none;"></a>';
+            html += '           <a is="emby-linkbutton" href="' + link.href + '"' + link.target + ' class="cardImageContainer coveredImage cardContent itemAction lazy blurhashed lazy-image-fadein-fast" aria-label="" style="background-image: url(\'' + posterUrl + '\');color: inherit; text-decoration: none;"></a>';
             html += '           <div class="cardOverlayContainer itemAction" data-action="link">';
-            html += '               <a is="emby-linkbutton" target="_blank" href="' + item.ProviderIds.JellyseerrRoot + '/' + item.SourceType + '/' + item.ProviderIds.Jellyseerr + '" class="cardImageContainer"  style="color: inherit; text-decoration: none;"></a>';
+            html += '               <a is="emby-linkbutton" href="' + link.href + '"' + link.target + ' class="cardImageContainer"  style="color: inherit; text-decoration: none;"></a>';
             html += '               <div class="cardOverlayButton-br flex">';
             html += '                   <button is="discover-requestbutton" type="button" data-action="none" class="discover-requestbutton cardOverlayButton cardOverlayButton-hover itemAction paper-icon-button-light emby-button" data-id="' + item.ProviderIds.Jellyseerr + '" data-media-type="' + item.SourceType + '">';
             html += '                       <span class="material-icons cardOverlayButtonIcon cardOverlayButtonIcon-hover add" aria-hidden="true"></span>';
@@ -147,7 +162,7 @@
             html += '       </div>';
             html += '       <div class="cardText cardTextCentered cardText-first">';
             html += '           <bdi>';
-            html += '               <a is="emby-linkbutton" style="color: inherit; text-decoration: none;" target="_blank" href="' + item.ProviderIds.JellyseerrRoot + '/' + item.SourceType + '/' + item.ProviderIds.Jellyseerr + '" class="itemAction textActionButton" title="' + item.Name + '" data-action="link">' + item.Name + '</a>';
+            html += '               <a is="emby-linkbutton" style="color: inherit; text-decoration: none;" href="' + link.href + '"' + link.target + ' class="itemAction textActionButton" title="' + item.Name + '" data-action="link">' + item.Name + '</a>';
             html += '           </bdi>';
             html += '       </div>';
             html += '       <div class="cardText cardTextCentered cardText-secondary">';
@@ -162,7 +177,7 @@
                 yearText += '<span class="material-icons" style="font-size: 14px; vertical-align: middle; color: #FFD700;">star</span> - • ';
             }
             yearText += date.getFullYear();
-            html += '               <a is="emby-linkbutton" style="color: inherit; text-decoration: none;" target="_blank" href="' + item.ProviderIds.JellyseerrRoot + '/' + item.SourceType + '/' + item.ProviderIds.Jellyseerr + '" class="itemAction textActionButton" title="' + date.getFullYear() + '" data-action="link">' + yearText + '</a>';
+            html += '               <a is="emby-linkbutton" style="color: inherit; text-decoration: none;" href="' + link.href + '"' + link.target + ' class="itemAction textActionButton" title="' + date.getFullYear() + '" data-action="link">' + yearText + '</a>';
             html += '           </bdi>';
             html += '       </div>';
             html += '   </div>';
